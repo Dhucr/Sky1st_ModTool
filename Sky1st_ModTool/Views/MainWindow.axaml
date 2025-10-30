@@ -1,0 +1,167 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Sky1st_ModTool.ViewModels"
+        xmlns:semi="clr-namespace:Semi.Avalonia;assembly=Semi.Avalonia"
+        xmlns:icons="clr-namespace:Semi.Avalonia.Icons;assembly=Semi.Avalonia"
+        x:Class="Sky1st_ModTool.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Sky1st Mod Tool">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- 菜单栏 -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="文件">
+                <MenuItem Header="保存" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="设置" Command="{Binding OpenSettingsCommand}"/>
+                <MenuItem Header="导出当前" Command="{Binding ExportCurrentCommand}"/>
+                <MenuItem Header="导出全部" Command="{Binding ExportAllCommand}"/>
+                <Separator/>
+                <MenuItem Header="退出"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- 自定义工具栏 -->
+        <Border DockPanel.Dock="Top"
+                BorderBrush="Orange" BorderThickness="0,1,0,1">
+            <StackPanel Orientation="Horizontal" Margin="10,3" Spacing="10">
+                <!-- 工具栏按钮 -->
+                <Button Height="30" Width="30" Command="{Binding SaveCommand}" ToolTip.Tip="保存">
+                    <PathIcon Height="28" Width="28" Foreground="Orange" Data="{StaticResource SemiIconSave}"/>
+                </Button>
+
+                <Button Height="30" Width="30" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="设置">
+                    <PathIcon Height="28" Width="28" Foreground="Orange" Data="{StaticResource SemiIconSetting}"/>
+                </Button>
+                
+                <Button Height="30" Width="30" Command="{Binding ExportCurrentCommand}" ToolTip.Tip="导出当前文件">
+                    <PathIcon Height="28" Width="28" Foreground="Orange" Data="{StaticResource SemiIconExport}"/>
+                </Button>
+                
+                <Button Height="30" Width="30" Command="{Binding ExportAllCommand}" ToolTip.Tip="导出全部文件">
+                    <PathIcon Height="28" Width="28" Foreground="#FFFF6A20" Data="{StaticResource SemiIconExport}"/>
+                </Button>
+                
+                <Separator/>
+                
+                <!-- PAC目录输入 -->
+                <TextBlock Text="PAC目录:" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding PACDirectory}" Width="300" Margin="5,0"/>
+                <Button Command="{Binding LoadPACFilesCommand}" ToolTip.Tip="刷新文件列表">
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- 消息框 -->
+        <Border DockPanel.Dock="Bottom" 
+                Background="{DynamicResource ThemeControlLowBrush}"
+                BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+                BorderThickness="0,1,0,0"
+                Height="60"
+                IsVisible="{Binding IsMessageVisible}">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- 消息文本框 -->
+                <TextBox Grid.Column="0" 
+                         Text="{Binding MessageText}" 
+                         IsReadOnly="True"
+                         BorderThickness="1"
+                         BorderBrush="Orange"
+                         Background="Transparent"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Center"/>
+                
+                <!-- 清除按钮 -->
+                <Button Grid.Column="1" 
+                        Command="{Binding ClearMessageCommand}"
+                        ToolTip.Tip="清除消息"
+                        Margin="10,0,0,0"
+                        Width="30"
+                        Height="30">
+                    <PathIcon Height="28" Width="28" Foreground="Orange" Data="{StaticResource SemiIconClear}"/>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- 主要内容区域 -->
+        <Grid ColumnDefinitions="300,*" Margin="5">
+            <!-- 左侧：文件选择列表 -->
+            <Border Grid.Column="0" Margin="0,0,5,0" 
+                    BorderBrush="Orange" 
+                    BorderThickness="1" 
+                    CornerRadius="3">
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <!-- 标题和返回按钮 -->
+                    <Border Grid.Row="0" BorderBrush="Orange"  
+                            BorderThickness="0,0,0,1">
+                        <Grid Margin="10,5">
+                            <TextBlock Text="文件列表" FontWeight="Bold"/>
+                            <Button Command="{Binding BackToPACListCommand}"
+                                    HorizontalAlignment="Right"
+                                    IsVisible="{Binding ShowFileList}"
+                                    Padding="10,2">
+                                <PathIcon Height="24" Width="24" Foreground="Orange" Data="{StaticResource SemiIconArrowLeft}"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- 加载指示器 -->
+                    <ProgressBar Grid.Row="1" 
+                               IsIndeterminate="True" 
+                               IsVisible="{Binding IsLoading}"
+                               Height="4" Margin="5,0"/>
+
+                    <!-- 文件列表 -->
+                    <Grid Grid.Row="2">
+                        <!-- PAC文件列表 -->
+                        <ListBox ItemsSource="{Binding PACFiles}"
+                                 SelectedItem="{Binding SelectedPACFile}"
+                                 SelectionMode="Single"
+                                 IsVisible="{Binding ShowFileList, Converter={x:Static BoolConverters.Not}}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FileName}" Margin="5,2"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!-- 文件条目列表 -->
+                        <ListBox ItemsSource="{Binding CurrentEntries}"
+                                 SelectedItem="{Binding SelectedEntry}"
+                                 SelectionMode="Single"
+                                 IsVisible="{Binding ShowFileList}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,80" Margin="5,2">
+                                        <TextBlock Grid.Column="0" Text="{Binding DisplayName}" 
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding FileSize}" 
+                                                   HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- 右侧：工作区 -->
+            <Border Grid.Column="1" 
+                    BorderBrush="Orange" 
+                    BorderThickness="1" 
+                    CornerRadius="3">
+                <!-- 工作区内容 -->
+                    <ContentControl Content="{Binding CurrentWorkspace}"
+                                    Margin="10"/>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

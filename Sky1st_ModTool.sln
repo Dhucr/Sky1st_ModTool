@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sky1st_ModTool", "Sky1st_ModTool\Sky1st_ModTool.csproj", "{945DF869-BFBD-435F-8335-5ACA74013030}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Debug|x86.ActiveCfg = Debug|x86
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Debug|x86.Build.0 = Debug|x86
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Release|x86.ActiveCfg = Release|x86
+		{945DF869-BFBD-435F-8335-5ACA74013030}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {47242863-BE6F-4446-9657-B93405E9766D}
+	EndGlobalSection
+EndGlobal

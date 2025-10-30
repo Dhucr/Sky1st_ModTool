@@ -1,0 +1,136 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:AvalonEdit="using:AvaloniaEdit"
+    xmlns:vm="using:Sky1st_ModTool.ViewModels"
+    xmlns:semi="clr-namespace:Semi.Avalonia;assembly=Semi.Avalonia"
+    xmlns:helper="using:Sky1st_ModTool.Utils"
+    x:Class="Sky1st_ModTool.Views.TblEditorView"
+    x:DataType="vm:TblEditorViewModel"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <DockPanel>
+        <Grid ColumnDefinitions="*,250,250">
+            <AvalonEdit:TextEditor Grid.Column="0" Margin="5,0,5,0"
+                Name="TextEditor"
+                IsVisible="{Binding ShowNodeList}"
+                WordWrap="True"
+                ShowLineNumbers="True"
+                FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+                FontSize="14"
+                SyntaxHighlighting="Json"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Visible"
+                helper:TextEditorHelper.IsSubscribed="True"
+                helper:TextEditorHelper.Text="{Binding TextAreaContent}">
+                <AvalonEdit:TextEditor.Options>
+                    <AvalonEdit:TextEditorOptions ShowBoxForControlCharacters="False"
+                        ShowEndOfLine="False"
+                        ShowSpaces="False"
+                        ShowTabs="True"
+                        ConvertTabsToSpaces="False"
+                        IndentationSize="4"
+                        WordWrapIndentation="4"
+                        InheritWordWrapIndentation="True"
+                        AcceptsTab="True"
+                        AllowToggleOverstrikeMode="True"
+                        EnableEmailHyperlinks="True"
+                        EnableHyperlinks="True"
+                        HighlightCurrentLine="True" />
+                </AvalonEdit:TextEditor.Options>
+            </AvalonEdit:TextEditor>
+
+            <Border Grid.Column="1" Margin="0,0,5,0"
+                IsVisible="{Binding ShowNodeList}"
+                BorderBrush="Orange"
+                BorderThickness="1"
+                CornerRadius="3">
+                <Grid RowDefinitions="Auto,300,*">
+                    <Border Grid.Row="0" BorderBrush="Orange"
+                        BorderThickness="0,0,0,1">
+                        <Grid Margin="10,5" ColumnDefinitions="*,50,10,50">
+                            <TextBlock Grid.Column="0" Text="辅助视图"
+                                FontWeight="Bold" />
+                            <Button Grid.Column="1"
+                                Content="添加"
+                                Foreground="Orange"
+                                Command="{Binding AddDataToNodeCommand}"
+                                HorizontalAlignment="Right"
+                                Padding="10,5">
+                            </Button>
+                            <Button Grid.Column="3"
+                                Content="删除"
+                                Foreground="Orange"
+                                Command="{Binding DeleteDataFromNodeCommand}"
+                                HorizontalAlignment="Right"
+                                Padding="10,5">
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Margin="0,0,5,0"
+                BorderBrush="Orange"
+                BorderThickness="1"
+                CornerRadius="3">
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <!-- 标题和返回按钮 -->
+                    <Border Grid.Row="0" BorderBrush="Orange"
+                        BorderThickness="0,0,0,1">
+                        <Grid Margin="10,5" ColumnDefinitions="*,50">
+                            <!-- 搜索框 -->
+                            <TextBox Grid.Column="0"
+                                Text="{Binding SearchText, Mode=TwoWay}"
+                                Watermark="输入搜索内容..."
+                                Padding="10" />
+                            <Button Grid.Column="1"
+                                Command="{Binding BackToNodeListCommand}"
+                                HorizontalAlignment="Right"
+                                IsVisible="{Binding ShowNodeList}"
+                                Padding="10,2">
+                                <PathIcon Height="24" Width="24" Foreground="Orange"
+                                    Data="{StaticResource SemiIconArrowLeft}" />
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- 加载指示器 -->
+                    <ProgressBar Grid.Row="1"
+                        IsIndeterminate="True"
+                        IsVisible="{Binding IsLoading}"
+                        Height="4" Margin="5,0" />
+
+                    <!-- 节点列表 -->
+                    <Grid Grid.Row="2">
+                        <!-- TBLNodes列表 -->
+                        <ListBox ItemsSource="{Binding TblNodes}"
+                            SelectedItem="{Binding SelectedTblNode}"
+                            SelectionMode="Single"
+                            IsVisible="{Binding ShowNodeList, Converter={x:Static BoolConverters.Not}}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Margin="5,2" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!-- 条目列表 -->
+                        <ListBox ItemsSource="{Binding CurrentNodeData}"
+                            SelectedItem="{Binding SelectedNodeData}"
+                            SelectionMode="Single"
+                            IsVisible="{Binding ShowNodeList}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Grid.Column="0" Text="{Binding DisplayName}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>
